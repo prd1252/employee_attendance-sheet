@@ -13,12 +13,11 @@ pipeline {
             }
         }
 
-        // ✅ Step 4: Add this stage to test Docker access
         stage('Test Docker Access') {
             steps {
                 script {
                     echo "Checking Docker installation..."
-                    sh 'docker --version'
+                    bat 'docker --version'
                 }
             }
         }
@@ -27,7 +26,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image..."
-                    docker.build("${IMAGE_NAME}")
+                    bat "docker build -t %IMAGE_NAME% ."
                 }
             }
         }
@@ -36,8 +35,8 @@ pipeline {
             steps {
                 script {
                     echo "Stopping old container..."
-                    sh "docker stop ${CONTAINER_NAME} || true"
-                    sh "docker rm ${CONTAINER_NAME} || true"
+                    bat "docker stop %CONTAINER_NAME% || exit 0"
+                    bat "docker rm %CONTAINER_NAME% || exit 0"
                 }
             }
         }
@@ -46,7 +45,7 @@ pipeline {
             steps {
                 script {
                     echo "Running container..."
-                    sh "docker run -d --name ${CONTAINER_NAME} -p 8000:8000 ${IMAGE_NAME}"
+                    bat "docker run -d --name %CONTAINER_NAME% -p 8000:8000 %IMAGE_NAME%"
                 }
             }
         }
