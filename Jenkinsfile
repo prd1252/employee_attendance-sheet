@@ -13,6 +13,16 @@ pipeline {
             }
         }
 
+        // ✅ Step 4: Add this stage to test Docker access
+        stage('Test Docker Access') {
+            steps {
+                script {
+                    echo "Checking Docker installation..."
+                    sh 'docker --version'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
